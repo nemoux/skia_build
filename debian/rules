@@ -1,0 +1,41 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	gn gen build/Shared --args='cc="clang" cxx="clang++" is_debug=false is_official_build=false is_component_build=false skia_use_system_libjpeg_turbo=true skia_use_system_libpng=true skia_use_system_icu=true skia_use_system_zlib=true skia_use_system_freetype2=true skia_use_system_expat=true'
+	#gn gen build/Shared --args='is_official_build=false is_component_build=true'  # shared library
+
+override_dh_auto_build:
+	ninja -C build/Shared/
+
+override_dh_auto_clean:
+	rm -rf build
+
+override_dh_auto_install:
+	mkdir -p debian/tmp/usr/lib && cp -rfv build/Shared/*.a debian/tmp/usr/lib/
+	#mkdir -p debian/tmp/usr/lib && cp -rfv build/Shared/*.so debian/tmp/usr/lib/
+	mkdir -p debian/tmp/usr/include/skia/ && cp -rfv include/* debian/tmp/usr/include/skia/
+	mkdir -p debian/tmp/usr/include/skia/opts/ && cp -rfv src/opts/*.h debian/tmp/usr/include/skia/opts/
+	mkdir -p debian/tmp/usr/lib/pkgconfig && cp debian/skia.pc debian/tmp/usr/lib/pkgconfig/
+
+
+# dh_make generated override targets
+# This is example for Cmake (See https://bugs.debian.org/641051 )
+#override_dh_auto_configure:
+#	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
+

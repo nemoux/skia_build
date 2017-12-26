@@ -1,0 +1,10 @@
+prefix=/usr
+bindir=${prefix}/bin/skia
+incdir=${prefix}/include/skia
+
+Name: Skia
+Description: Skia Graphics Library
+Version: m56
+Requires: freetype2 fontconfig libjpeg libpng expat libdrm gl
+Libs: -lskia
+Cflags: -I${incdir}/animator -I${incdir}/codec -I${incdir}/core -I${incdir}/effects -I${incdir}/images -I${incdir}/pathops -I${incdir}/ports -I${incdir}/utils -I${incdir}/xml -I${incdir}/c -I${incdir}/config -I${incdir}/gpu -I${incdir}/svg -I${incdir}/views -I${incdir}/private
