@@ -10,14 +10,14 @@ I recommend Ubuntu server 16.10.
 1. Initialize skia sources
 
 ```
-$init.sh
+$./init.sh
 ```
 
 2. Build skia and create skia debian package
 
 Export some bash variables for debianize.
 ```
-$export.sh
+$./export.sh
 ```
 
 Append "dl" in the libs in the component("skia") for creating dynamic library.
